@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://redraftstudio.github.io/sitemap.xml
