@@ -1,0 +1,20 @@
+name: Tell search engines about new pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait for the site to publish
+        run: sleep 120
+      - name: Submit URLs to IndexNow (Bing and partners)
+        run: |
+          code=$(curl -sS -o /tmp/out.txt -w '%{http_code}' -X POST https://api.indexnow.org/indexnow \
+            -H 'Content-Type: application/json; charset=utf-8' --data-binary @indexnow.json)
+          echo "IndexNow answered $code"; cat /tmp/out.txt
+          test "$code" = "200" -o "$code" = "202"
